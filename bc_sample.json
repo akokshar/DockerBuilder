@@ -1,0 +1,67 @@
+{
+	"kind": "Template",
+	"apiVersion": "v1",
+	"metadata": {},
+	"objects": [
+	{
+		"kind": "ImageStream",
+		"apiVersion": "v1",
+		"metadata": {
+			"name": "dockerbuildertest",
+			"annotations": {
+				"description": "Keeps track of changes in the application image"
+			}
+		}
+	},
+	{
+		"kind": "BuildConfig",
+		"apiVersion": "v1",
+		"metadata": {
+			"name": "dockerbuildertest",
+			"annotations": {
+				"description": "build config using custom builder"
+			}
+		},
+		"spec": {
+			"triggers": [],
+			"strategy": {
+				"type": "Custom",
+				"customStrategy": {
+					"from": {
+						"kind": "ImageStreamTag",
+						"namespace": "openshift",
+						"name": "builderdockerssh:latest"
+					},
+					"exposeDockerSocket": true,
+					"env": [
+					{
+						"name": "SOURCE_SSH_REPOSITORY",
+						"value": "${SOURCE_SSH_REPOSITORY}"
+					},
+					{
+						"name": "SOURCE_SSH_RIVATE_KEY",
+						"value": "${SOURCE_SSH_RIVATE_KEY}"
+					}
+					]
+				}
+			},
+			"output": {
+				"to": {
+					"kind": "ImageStreamTag",
+					"name": "dockerbuildertest:latest"
+				}
+			}
+		}
+	}
+	],
+		"parameters": [
+		{
+			"name": "SOURCE_SSH_REPOSITORY",
+			"description": "format user@host:path"
+		},
+		{
+			"name": "SOURCE_SSH_RIVATE_KEY",
+			"description": "content of identity file"
+		}
+	]
+}
