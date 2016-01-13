@@ -1,4 +1,5 @@
-Cusotm builder image. Downloads your docker project by ssh, builds and push resulting image to Openshift docker-registry.
+Cusotm builder image. (derived from https://github.com/openshift/origin/tree/master/images/builder/docker/custom-docker-builder)
+Downloads your docker project by ssh, builds and push resulting image to Openshift docker-registry.
 
 1. Build builder
 
