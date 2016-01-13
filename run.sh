@@ -15,8 +15,6 @@ if [ -z "${OUTPUT_IMAGE}" ]; then
 	exit 1
 fi
 
-TAG="${OUTPUT_REGISTRY}/${OUTPUT_IMAGE}"
-
 if [[ -z "${SOURCE_SSH_REPOSITORY}" ]]; then
 	echo "Source ssh repository is no set. Use 'SOURCE_SSH_REPOSITORY' enviroment variables"
 	echo "format user@host:/path"
@@ -46,12 +44,8 @@ echo "building image..."
 
 docker build --rm -t "${TAG}" "${BUILD_DIR}"
 
-if [[ -d /var/run/secrets/openshift.io/push ]] && [[ ! -e /root/.dockercfg ]]; then
-	cp /var/run/secrets/openshift.io/push/.dockercfg /root/.dockercfg
-fi
-
-if [ -n "${OUTPUT_IMAGE}" ] || [ -s "/root/.dockercfg" ]; then
-	docker push "${TAG}"
-fi
+TAG="${OUTPUT_REGISTRY}/${OUTPUT_IMAGE}"
+cp ${PUSH_DOCKERCFG_PATH} /root/.dockercfg
+docker push "${TAG}"
 
 exit 0
